@@ -25,7 +25,7 @@ describe('Student Registration page', () => {
     cy.visit('/');
   });
 
-  it('should submit form with valid data', () => {
+  it('should register a new student', () => {
     const {
       firstName, lastName, email, gender, mobileNumber, dateOfBirth,
       subject, hobbie, adress, state, city
@@ -43,7 +43,6 @@ describe('Student Registration page', () => {
     registrationPage.selectCity(city);
     registrationPage.submitForm();
     registrationPage.assertSubmitWindow();
-    registrationPage.assertWindowData(firstName, lastName, email,
-      gender, mobileNumber, dateOfBirth, subject, hobbie, adress, state, city);
+    registrationPage.assertWindowData(testData);
   });
 });

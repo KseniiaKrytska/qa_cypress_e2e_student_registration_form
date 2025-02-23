@@ -1,19 +1,28 @@
 /// <reference types='cypress' />
 
 export default class RegistrationPage {
+  get firstNameField() {
+    return cy.get('#firstName');
+  }
+
   fillFirstNameField(firstName) {
-    return cy.get('#firstName')
-      .type(firstName);
+    return this.firstNameField.type(firstName);
+  }
+
+  get lastNameField() {
+    return cy.get('#lastName');
   }
 
   fillLastNameField(lastName) {
-    return cy.get('#lastName')
-      .type(lastName);
+    return this.lastNameField.type(lastName);
+  }
+
+  get emainField() {
+    return cy.get('#userEmail');
   }
 
   fillEmailField(email) {
-    return cy.get('#userEmail')
-      .type(email);
+    return this.emainField.type(email);
   }
 
   chooseGender(gender) {
@@ -21,20 +30,43 @@ export default class RegistrationPage {
       .click();
   }
 
+  get mobileField() {
+    return cy.get('#userNumber');
+  }
+
   fillMobileField(number) {
-    return cy.get('#userNumber')
-      .type(number);
+    return this.mobileField.type(number);
+  }
+
+  get birthDateField() {
+    return cy.get('#dateOfBirthInput').click();
+  }
+
+  get birthYearSelector() {
+    return cy.get('.react-datepicker__year-select');
+  }
+
+  get birthMonthSelector() {
+    return cy.get('.react-datepicker__month-select');
+  }
+
+  birthDaySelector(day) {
+    return cy.get(`.react-datepicker__day--${day}`).first();
   }
 
   fillBirthDateField({ day, month, year }) {
-    cy.get('#dateOfBirthInput').click();
-    cy.get('.react-datepicker__year-select').select(year);
-    cy.get('.react-datepicker__month-select').select(month);
-    cy.get(`.react-datepicker__day--${day}`).first().click();
+    this.birthDateField.click();
+    this.birthYearSelector.select(year);
+    this.birthMonthSelector.select(month);
+    this.birthDaySelector(day).click();
+  }
+
+  get subjectField() {
+    return cy.get('#subjectsContainer');
   }
 
   fillSubjectsField(subject) {
-    return cy.get('#subjectsContainer')
+    return this.subjectField
       .type(`${subject}{Enter}`);
   }
 
@@ -43,41 +75,116 @@ export default class RegistrationPage {
       .click();
   }
 
+  get adressField() {
+    return cy.get('#currentAddress');
+  }
+
   fillAdressField(adress) {
-    return cy.get('#currentAddress')
-      .type(adress);
+    return this.adressField.type(adress);
+  }
+
+  get stateField() {
+    return cy.get('#state');
+  }
+
+  getStateOption(stateName) {
+    return cy.contains('.css-11unzgr div', stateName);
   }
 
   selectState(stateName) {
-    cy.get('#state').click();
-    cy.contains('.css-11unzgr div', stateName).click();
+    this.stateField.click();
+    this.getStateOption(stateName).click();
+  }
+
+  get cityField() {
+    return cy.get('#city');
+  }
+
+  get selectorCityNoida() {
+    return cy.get('#react-select-4-option-2').should('be.visible');
   }
 
   selectCity() {
-    cy.get('#city').click();
-    cy.get('#react-select-4-option-2').should('be.visible').click();
+    this.cityField.click();
+    this.selectorCityNoida.click();
+  }
+
+  get submitBtn() {
+    return cy.get('#submit');
   }
 
   submitForm() {
-    return cy.get('#submit')
-      .click();
+    return this.submitBtn.click();
+  }
+
+  get submitWindow() {
+    return cy.get('.modal-content');
   }
 
   assertSubmitWindow() {
-    return cy.get('.modal-content').should('be.visible');
+    return this.submitWindow
+      .should('be.visible');
   }
 
-  assertWindowData(firstName, lastName, email,
-    gender, mobileNumber, dateOfBirth, subject, hobbie, adress, state, city) {
+  get windowStudentNameValue() {
+    return cy.contains('td', 'Student Name').next();
+  }
+
+  get windowStudentEmailValue() {
+    return cy.contains('td', 'Student Email').next();
+  }
+
+  get windowStudentGenderValue() {
+    return cy.contains('td', 'Gender').next();
+  }
+
+  get windowStudentMobileValue() {
+    return cy.contains('td', 'Mobile').next();
+  }
+
+  get windowStudentBirthdayValue() {
+    return cy.contains('td', 'Date of Birth').next();
+  }
+
+  get windowStudentSubjectValue() {
+    return cy.contains('td', 'Subjects').next();
+  }
+
+  get windowStudentHobbiesValue() {
+    return cy.contains('td', 'Hobbies').next();
+  }
+
+  get windowStudenAdressValue() {
+    return cy.contains('td', 'Address').next();
+  }
+
+  get windowStudenStateCityValue() {
+    return cy.contains('td', 'State and City').next();
+  }
+
+  assertWindowData({
+    firstName, lastName, email, gender, mobileNumber,
+    dateOfBirth, subject, hobbie, adress, state, city
+  }) {
     const { day, month, year } = dateOfBirth;
-    cy.contains('td', 'Student Name').next().should('have.text', `${firstName} ${lastName}`);
-    cy.contains('td', 'Student Email').next().should('have.text', email);
-    cy.contains('td', 'Gender').next().should('have.text', gender);
-    cy.contains('td', 'Mobile').next().should('have.text', mobileNumber);
-    cy.contains('td', 'Date of Birth').next().should('have.text', `${day.slice(1)} ${month},${year}`);
-    cy.contains('td', 'Subjects').next().should('have.text', subject);
-    cy.contains('td', 'Hobbies').next().should('have.text', hobbie);
-    cy.contains('td', 'Address').next().should('have.text', adress);
-    cy.contains('td', 'State and City').next().should('have.text', `${state} ${city}`);
+
+    this.windowStudentNameValue
+      .should('have.text', `${firstName} ${lastName}`);
+    this.windowStudentEmailValue
+      .should('have.text', email);
+    this.windowStudentGenderValue
+      .should('have.text', gender);
+    this.windowStudentMobileValue
+      .should('have.text', mobileNumber);
+    this.windowStudentBirthdayValue
+      .should('have.text', `${day.slice(1)} ${month},${year}`);
+    this.windowStudentSubjectValue
+      .should('have.text', subject);
+    this.windowStudentHobbiesValue
+      .should('have.text', hobbie);
+    this.windowStudenAdressValue
+      .should('have.text', adress);
+    this.windowStudenStateCityValue
+      .should('have.text', `${state} ${city}`);
   }
 }
